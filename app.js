@@ -21,6 +21,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Read the session and taking the data and decoding/encoding it
+passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -54,6 +55,22 @@ app.post("/register", (req, res) => {
       res.redirect("/secret");
     });
   });
+});
+
+//LOGIN ROUTE
+
+// Render login form
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+// Login logic
+// Middleware
+app.post("/login", passport.authenticate("local", {
+  successRedirect: "/secret",
+  failureRedirect: "/login"
+}), (req, res) => {
+
 });
 
 app.listen(3000, () => console.log("Server Started on Port : 3000"));
